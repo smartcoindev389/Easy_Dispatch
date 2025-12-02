@@ -1,0 +1,68 @@
+import { Package, LogOut } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { NavLink } from '@/components/NavLink';
+
+interface HeaderProps {
+  appName?: string;
+  onLogout?: () => void;
+  userName?: string;
+}
+
+export default function Header({
+  appName = 'Easy Dispatch',
+  onLogout,
+  userName,
+}: HeaderProps) {
+  return (
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-card shadow-sm">
+      <div className="container flex h-16 items-center justify-between px-4">
+        <div className="flex items-center gap-8">
+          <NavLink
+            to="/"
+            className="flex items-center gap-2 text-xl font-bold text-foreground transition-colors hover:text-primary"
+          >
+            <Package className="h-6 w-6 text-primary" />
+            {appName}
+          </NavLink>
+
+          <nav className="hidden items-center gap-6 md:flex" aria-label="Main navigation">
+            <NavLink
+              to="/quote"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              activeClassName="text-foreground font-semibold"
+            >
+              New Quote
+            </NavLink>
+            <NavLink
+              to="/dashboard"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              activeClassName="text-foreground font-semibold"
+            >
+              Dashboard
+            </NavLink>
+          </nav>
+        </div>
+
+        <div className="flex items-center gap-4">
+          {userName && (
+            <span className="text-sm text-muted-foreground">
+              {userName}
+            </span>
+          )}
+          {onLogout && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onLogout}
+              className="gap-2"
+              aria-label="Log out"
+            >
+              <LogOut className="h-4 w-4" />
+              <span className="hidden sm:inline">Logout</span>
+            </Button>
+          )}
+        </div>
+      </div>
+    </header>
+  );
+}
