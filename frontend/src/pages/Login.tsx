@@ -10,18 +10,22 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, Package } from 'lucide-react';
 import { apiClient } from '@/services/api';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
-const loginSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
+const createLoginSchema = (t: (key: string) => string) => z.object({
+  email: z.string().email(t('auth.invalidEmail')),
+  password: z.string().min(6, t('auth.passwordMinLength')),
 });
 
-type LoginFormData = z.infer<typeof loginSchema>;
-
 export default function Login() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  
+  const loginSchema = createLoginSchema(t);
+  type LoginFormData = z.infer<typeof loginSchema>;
 
   // Check if user is already authenticated with a valid token
   useEffect(() => {
@@ -73,7 +77,7 @@ export default function Login() {
       localStorage.setItem('clientId', response.clientId);
       navigate('/dashboard');
     } catch (err: any) {
-      setError(err.message || 'Login failed. Please check your credentials.');
+      setError(err.message || t('auth.loginFailed'));
     }
   };
 
@@ -83,7 +87,7 @@ export default function Login() {
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-background to-muted">
         <div className="text-center">
           <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" />
-          <p className="mt-4 text-muted-foreground">Checking authentication...</p>
+          <p className="mt-4 text-muted-foreground">{t('auth.checkingAuth')}</p>
         </div>
       </div>
     );
@@ -96,12 +100,15 @@ export default function Login() {
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
             <Package className="h-6 w-6 text-primary" />
           </div>
-          <CardTitle className="text-2xl">Welcome to Easy Dispatch</CardTitle>
+          <CardTitle className="text-2xl">{t('auth.welcome')}</CardTitle>
           <CardDescription>
-            Sign in to manage your shipping quotes
+            {t('auth.signInDescription')}
           </CardDescription>
         </CardHeader>
         <CardContent>
+          <div className="mb-4 flex justify-end">
+            <LanguageSwitcher />
+          </div>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {error && (
               <Alert variant="destructive">
@@ -110,7 +117,7 @@ export default function Login() {
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t('auth.email')}</Label>
               <Input
                 id="email"
                 type="email"
@@ -125,7 +132,7 @@ export default function Login() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t('auth.password')}</Label>
               <Input
                 id="password"
                 type="password"
@@ -148,26 +155,26 @@ export default function Login() {
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Signing in...
+                  {t('auth.signingIn')}
                 </>
               ) : (
-                'Sign In'
+                t('auth.signIn')
               )}
             </Button>
 
             <div className="rounded-md bg-muted p-3 text-sm text-muted-foreground">
-              <p className="font-medium mb-1">Demo Credentials:</p>
-              <p>Email: demo@easydispatch.com</p>
-              <p>Password: demo123</p>
+              <p className="font-medium mb-1">{t('auth.demoCredentials')}</p>
+              <p>{t('auth.demoEmail')}</p>
+              <p>{t('auth.demoPassword')}</p>
             </div>
 
             <div className="text-center text-sm text-muted-foreground">
-              Don't have an account?{' '}
+              {t('auth.dontHaveAccount')}{' '}
               <Link
                 to="/signup"
                 className="text-primary hover:underline font-medium"
               >
-                Sign up
+                {t('auth.signUp')}
               </Link>
             </div>
           </form>

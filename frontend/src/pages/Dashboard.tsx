@@ -16,8 +16,10 @@ import {
 } from '@/components/ui/select';
 import { Search, TrendingUp, Package, AlertCircle } from 'lucide-react';
 import { apiClient } from '@/services/api';
+import { useTranslation } from 'react-i18next';
 
 export default function Dashboard() {
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [selectedQuoteId, setSelectedQuoteId] = useState<string | null>(null);
   // Use non-empty sentinel values for Select (Radix Select does not allow empty string for items)
@@ -57,9 +59,9 @@ export default function Dashboard() {
       <main className="container mx-auto px-4 py-8">
         <div className="space-y-8">
           <div>
-            <h1 className="text-4xl font-bold mb-2">Dashboard</h1>
+            <h1 className="text-4xl font-bold mb-2">{t('dashboard.title')}</h1>
             <p className="text-lg text-muted-foreground">
-              Track and manage all your shipping quotes
+              {t('dashboard.description')}
             </p>
           </div>
 
@@ -68,7 +70,7 @@ export default function Dashboard() {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Total Quotes (7d)
+                  {t('dashboard.totalQuotes')}
                 </CardTitle>
                 <Package className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
@@ -80,13 +82,13 @@ export default function Dashboard() {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Average Price
+                  {t('dashboard.averagePrice')}
                 </CardTitle>
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {new Intl.NumberFormat('pt-BR', {
+                  {new Intl.NumberFormat(i18n.language === 'pt-BR' ? 'pt-BR' : 'en-US', {
                     style: 'currency',
                     currency: 'BRL',
                   }).format(avgPrice)}
@@ -96,7 +98,7 @@ export default function Dashboard() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">Errors</CardTitle>
+                <CardTitle className="text-sm font-medium">{t('dashboard.errors')}</CardTitle>
                 <AlertCircle className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -110,37 +112,37 @@ export default function Dashboard() {
           {/* Filters */}
           <Card>
             <CardHeader>
-              <CardTitle>Filters</CardTitle>
+              <CardTitle>{t('dashboard.filters')}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex flex-col gap-4 sm:flex-row">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
-                    placeholder="Search quotes..."
+                    placeholder={t('dashboard.searchQuotes')}
                     className="pl-9"
-                    aria-label="Search quotes"
+                    aria-label={t('dashboard.searchQuotes')}
                   />
                 </div>
 
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
                   <SelectTrigger className="w-full sm:w-[180px]">
-                    <SelectValue placeholder="All statuses" />
+                    <SelectValue placeholder={t('dashboard.allStatuses')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All statuses</SelectItem>
-                    <SelectItem value="success">Success</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="error">Error</SelectItem>
+                    <SelectItem value="all">{t('dashboard.allStatuses')}</SelectItem>
+                    <SelectItem value="success">{t('quoteItem.status.success')}</SelectItem>
+                    <SelectItem value="pending">{t('quoteItem.status.pending')}</SelectItem>
+                    <SelectItem value="error">{t('quoteItem.status.error')}</SelectItem>
                   </SelectContent>
                 </Select>
 
                 <Select value={carrierFilter} onValueChange={setCarrierFilter}>
                   <SelectTrigger className="w-full sm:w-[180px]">
-                    <SelectValue placeholder="All carriers" />
+                    <SelectValue placeholder={t('dashboard.allCarriers')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All carriers</SelectItem>
+                    <SelectItem value="all">{t('dashboard.allCarriers')}</SelectItem>
                     <SelectItem value="FedEx">FedEx</SelectItem>
                     <SelectItem value="UPS">UPS</SelectItem>
                     <SelectItem value="DHL">DHL</SelectItem>
@@ -154,7 +156,7 @@ export default function Dashboard() {
                     setCarrierFilter('all');
                   }}
                 >
-                  Clear
+                  {t('common.clear')}
                 </Button>
               </div>
             </CardContent>
@@ -165,7 +167,7 @@ export default function Dashboard() {
             quotes={quotes}
             onSelect={setSelectedQuoteId}
             isLoading={isLoading}
-            error={error ? 'Failed to load quotes' : undefined}
+            error={error ? t('dashboard.failedToLoad') : undefined}
           />
         </div>
       </main>

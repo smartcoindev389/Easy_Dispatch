@@ -4,8 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Package, TrendingUp, Shield, Zap } from 'lucide-react';
 import { apiClient } from '@/services/api';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 export default function Index() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -26,23 +29,23 @@ export default function Index() {
   const features = [
     {
       icon: Zap,
-      title: 'Instant Quotes',
-      description: 'Get shipping quotes in seconds from multiple carriers',
+      title: t('home.features.instantQuotes.title'),
+      description: t('home.features.instantQuotes.description'),
     },
     {
       icon: TrendingUp,
-      title: 'Price Transparency',
-      description: 'Clear breakdown of costs, markups, and final pricing',
+      title: t('home.features.priceTransparency.title'),
+      description: t('home.features.priceTransparency.description'),
     },
     {
       icon: Shield,
-      title: 'Reliable Tracking',
-      description: 'Track all quotes with correlation IDs and real-time updates',
+      title: t('home.features.reliableTracking.title'),
+      description: t('home.features.reliableTracking.description'),
     },
     {
       icon: Package,
-      title: 'Multi-Carrier',
-      description: 'Compare rates from FedEx, UPS, DHL, and more',
+      title: t('home.features.multiCarrier.title'),
+      description: t('home.features.multiCarrier.description'),
     },
   ];
 
@@ -54,12 +57,15 @@ export default function Index() {
             <Package className="h-8 w-8 text-primary" />
             Easy Dispatch
           </div>
-          {!isAuthenticated && (
-            <Button onClick={() => navigate('/login')}>Sign In</Button>
-          )}
-          {isAuthenticated && (
-            <Button onClick={handleLogout}>Sign Out</Button>
-          )}
+          <div className="flex items-center gap-4">
+            <LanguageSwitcher />
+            {!isAuthenticated && (
+              <Button onClick={() => navigate('/login')}>{t('auth.signIn')}</Button>
+            )}
+            {isAuthenticated && (
+              <Button onClick={handleLogout}>{t('auth.signOut')}</Button>
+            )}
+          </div>
         </div>
       </header>
 
@@ -67,13 +73,12 @@ export default function Index() {
         <div className="mx-auto max-w-4xl space-y-16 text-center">
           <div className="space-y-6">
             <h1 className="text-5xl font-bold leading-tight md:text-6xl">
-              Shipping Quotes
+              {t('home.title')}
               <br />
-              <span className="text-primary">Made Simple</span>
+              <span className="text-primary">{t('home.subtitle')}</span>
             </h1>
             <p className="mx-auto max-w-2xl text-xl text-muted-foreground">
-              Professional logistics quote management for businesses of all sizes.
-              Compare carriers, track quotes, and manage your shipping efficiently.
+              {t('home.description')}
             </p>
             <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
               {!isAuthenticated && (
@@ -83,7 +88,7 @@ export default function Index() {
                     onClick={() => navigate('/signup')}
                     className="text-lg px-8"
                   >
-                    Get Started
+                    {t('home.getStarted')}
                   </Button>
                   <Button
                     size="lg"
@@ -91,7 +96,7 @@ export default function Index() {
                     onClick={() => navigate('/login')}
                     className="text-lg px-8"
                   >
-                    Sign In
+                    {t('auth.signIn')}
                   </Button>
                 </>
               )}
@@ -102,7 +107,7 @@ export default function Index() {
                     onClick={() => navigate('/quote')}
                     className="text-lg px-8"
                   >
-                    New Quote
+                    {t('navigation.newQuote')}
                   </Button>
                   <Button
                     size="lg"
@@ -110,7 +115,7 @@ export default function Index() {
                     onClick={() => navigate('/dashboard')}
                     className="text-lg px-8"
                   >
-                    Dashboard
+                    {t('navigation.dashboard')}
                   </Button>
                 </>
               )}
@@ -133,18 +138,18 @@ export default function Index() {
           </div>
 
           <div className="rounded-lg border-2 border-primary/20 bg-primary/5 p-8">
-            <h2 className="mb-4 text-2xl font-bold">Ready to streamline your shipping?</h2>
+            <h2 className="mb-4 text-2xl font-bold">{t('home.readyToStreamline')}</h2>
             <p className="mb-6 text-muted-foreground">
-              Join businesses using Easy Dispatch to save time and money on logistics.
+              {t('home.joinBusinesses')}
             </p>
             {!isAuthenticated && (
               <Button size="lg" onClick={() => navigate('/signup')}>
-                Start Now
+                {t('home.startNow')}
               </Button>
             )}
             {isAuthenticated && (
               <Button size="lg" onClick={() => navigate('/quote')}>
-                New Quote
+                {t('navigation.newQuote')}
               </Button> 
             )}
           </div>
@@ -152,7 +157,7 @@ export default function Index() {
       </main>
 
       <footer className="container mx-auto px-4 py-8 text-center text-sm text-muted-foreground">
-        <p>© 2024 Easy Dispatch. Built for efficient logistics management.</p>
+        <p>{t('home.footer')}</p>
       </footer>
     </div>
   );

@@ -10,23 +10,27 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, Package } from 'lucide-react';
 import { apiClient } from '@/services/api';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
-const signupSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
+const createSignupSchema = (t: (key: string) => string) => z.object({
+  name: z.string().min(2, t('auth.nameMinLength')),
+  email: z.string().email(t('auth.invalidEmail')),
+  password: z.string().min(6, t('auth.passwordMinLength')),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
+  message: t('auth.passwordsDontMatch'),
   path: ['confirmPassword'],
 });
 
-type SignupFormData = z.infer<typeof signupSchema>;
-
 export default function Signup() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  
+  const signupSchema = createSignupSchema(t);
+  type SignupFormData = z.infer<typeof signupSchema>;
 
   // Check if user is already authenticated with a valid token
   useEffect(() => {
@@ -79,7 +83,7 @@ export default function Signup() {
       localStorage.setItem('clientId', response.clientId);
       navigate('/dashboard');
     } catch (err: any) {
-      setError(err.message || 'Signup failed. Please try again.');
+      setError(err.message || t('auth.signupFailed'));
     }
   };
 
@@ -89,7 +93,7 @@ export default function Signup() {
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-background to-muted">
         <div className="text-center">
           <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" />
-          <p className="mt-4 text-muted-foreground">Checking authentication...</p>
+          <p className="mt-4 text-muted-foreground">{t('auth.checkingAuth')}</p>
         </div>
       </div>
     );
@@ -102,12 +106,15 @@ export default function Signup() {
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
             <Package className="h-6 w-6 text-primary" />
           </div>
-          <CardTitle className="text-2xl">Create an Account</CardTitle>
+          <CardTitle className="text-2xl">{t('auth.createAccount')}</CardTitle>
           <CardDescription>
-            Sign up to start managing your shipping quotes
+            {t('auth.signUpDescription')}
           </CardDescription>
         </CardHeader>
         <CardContent>
+          <div className="mb-4 flex justify-end">
+            <LanguageSwitcher />
+          </div>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {error && (
               <Alert variant="destructive">
@@ -116,7 +123,7 @@ export default function Signup() {
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
+              <Label htmlFor="name">{t('auth.fullName')}</Label>
               <Input
                 id="name"
                 type="text"
@@ -131,7 +138,7 @@ export default function Signup() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t('auth.email')}</Label>
               <Input
                 id="email"
                 type="email"
@@ -146,7 +153,7 @@ export default function Signup() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t('auth.password')}</Label>
               <Input
                 id="password"
                 type="password"
@@ -161,7 +168,7 @@ export default function Signup() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Label htmlFor="confirmPassword">{t('auth.confirmPassword')}</Label>
               <Input
                 id="confirmPassword"
                 type="password"
@@ -184,20 +191,20 @@ export default function Signup() {
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Creating account...
+                  {t('auth.creatingAccount')}
                 </>
               ) : (
-                'Sign Up'
+                t('auth.signUp')
               )}
             </Button>
 
             <div className="text-center text-sm text-muted-foreground">
-              Already have an account?{' '}
+              {t('auth.alreadyHaveAccount')}{' '}
               <Link
                 to="/login"
                 className="text-primary hover:underline font-medium"
               >
-                Sign in
+                {t('auth.signIn')}
               </Link>
             </div>
           </form>

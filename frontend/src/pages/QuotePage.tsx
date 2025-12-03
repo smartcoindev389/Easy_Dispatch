@@ -9,8 +9,10 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CheckCircle2 } from 'lucide-react';
 import { Quote } from '@/types/quote';
 import { apiClient } from '@/services/api';
+import { useTranslation } from 'react-i18next';
 
 export default function QuotePage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [successQuote, setSuccessQuote] = useState<Quote | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -31,7 +33,7 @@ export default function QuotePage() {
       const result = await submitQuote.mutateAsync(payload);
       setSuccessQuote(result);
     } catch (err: any) {
-      setError(err.message || 'Failed to generate quote. Please try again.');
+      setError(err.message || t('quote.failedToGenerate'));
     }
   };
 
@@ -44,9 +46,9 @@ export default function QuotePage() {
       <main className="container mx-auto px-4 py-8">
         <div className="mx-auto max-w-4xl space-y-8">
           <div className="text-center space-y-2">
-            <h1 className="text-4xl font-bold">Get a Shipping Quote</h1>
+            <h1 className="text-4xl font-bold">{t('quote.getShippingQuote')}</h1>
             <p className="text-lg text-muted-foreground">
-              Enter your shipment details to receive instant pricing
+              {t('quote.quoteDescription')}
             </p>
           </div>
 
@@ -60,7 +62,7 @@ export default function QuotePage() {
             <Alert className="border-success bg-success/10">
               <CheckCircle2 className="h-4 w-4 text-success" />
               <AlertDescription className="text-success-foreground">
-                Quote generated successfully! Correlation ID: {successQuote.correlationId}
+                {t('quote.quoteGenerated')} {t('quote.correlationId')}: {successQuote.correlationId}
               </AlertDescription>
             </Alert>
           )}
@@ -68,9 +70,9 @@ export default function QuotePage() {
           <div className="grid gap-8 md:grid-cols-1">
             <Card className="md:col-span-2">
               <CardHeader>
-                <CardTitle>Shipment Information</CardTitle>
+                <CardTitle>{t('quote.shipmentInformation')}</CardTitle>
                 <CardDescription>
-                  Fill in the details of your package
+                  {t('quote.shipmentDetails')}
                 </CardDescription>
               </CardHeader>
               <CardContent>

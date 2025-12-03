@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Package, Calendar } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 
 interface QuoteItemProps {
   quote: Quote;
@@ -20,11 +21,23 @@ const STATUS_VARIANTS: Record<
 };
 
 export default function QuoteItem({ quote, onClick }: QuoteItemProps) {
+  const { t, i18n } = useTranslation();
+  
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('pt-BR', {
+    return new Intl.NumberFormat(i18n.language === 'pt-BR' ? 'pt-BR' : 'en-US', {
       style: 'currency',
       currency: 'BRL',
     }).format(amount);
+  };
+
+  const getStatusLabel = (status: Quote['status']) => {
+    const statusMap: Record<string, string> = {
+      success: t('quoteItem.status.success'),
+      pending: t('quoteItem.status.pending'),
+      error: t('quoteItem.status.error'),
+      carrier_timeout: t('quoteItem.status.carrierTimeout'),
+    };
+    return statusMap[status] || status;
   };
 
   return (
@@ -51,7 +64,7 @@ export default function QuoteItem({ quote, onClick }: QuoteItemProps) {
             <div className="flex items-center gap-2">
               <h3 className="font-semibold">{quote.carrier}</h3>
               <Badge variant={STATUS_VARIANTS[quote.status]}>
-                {quote.status}
+                {getStatusLabel(quote.status)}
               </Badge>
             </div>
             <p className="text-sm text-muted-foreground">{quote.service}</p>

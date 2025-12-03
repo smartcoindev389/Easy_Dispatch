@@ -5,6 +5,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { I18nService } from 'nestjs-i18n';
 import * as bcrypt from 'bcryptjs';
 import { FirestoreService } from '../firestore/firestore.service';
 import { LoginDto } from './dto/login.dto';
@@ -16,6 +17,7 @@ export class AuthService {
   constructor(
     private jwtService: JwtService,
     private firestoreService: FirestoreService,
+    private i18n: I18nService,
   ) {}
 
   async validateClientCredentials(
@@ -61,7 +63,9 @@ export class AuthService {
     );
 
     if (existingClient) {
-      throw new ConflictException('Email already registered');
+      throw new ConflictException(
+        this.i18n.t('auth.EMAIL_ALREADY_REGISTERED'),
+      );
     }
 
     // Hash password
@@ -97,7 +101,9 @@ export class AuthService {
     );
 
     if (!client) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException(
+        this.i18n.t('auth.INVALID_CREDENTIALS'),
+      );
     }
 
     const payload = {

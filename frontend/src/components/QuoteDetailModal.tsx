@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import PriceCard from './PriceCard';
+import { useTranslation } from 'react-i18next';
 
 interface QuoteDetailModalProps {
   open: boolean;
@@ -34,6 +35,7 @@ export default function QuoteDetailModal({
   quote,
   onRegenerate,
 }: QuoteDetailModalProps) {
+  const { t, i18n } = useTranslation();
   const [isRegenerating, setIsRegenerating] = useState(false);
   const [debugExpanded, setDebugExpanded] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -52,13 +54,13 @@ export default function QuoteDetailModal({
     try {
       await onRegenerate();
       toast({
-        title: 'Quote regenerated',
-        description: 'The quote has been successfully regenerated.',
+        title: t('quoteDetail.quoteRegenerated'),
+        description: t('quoteDetail.regeneratedDescription'),
       });
     } catch (error) {
       toast({
-        title: 'Failed to regenerate',
-        description: 'Could not regenerate the quote. Please try again.',
+        title: t('quoteDetail.failedToRegenerate'),
+        description: t('quoteDetail.failedToRegenerateDescription'),
         variant: 'destructive',
       });
     } finally {
@@ -69,8 +71,8 @@ export default function QuoteDetailModal({
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     toast({
-      title: 'Copied',
-      description: 'Correlation ID copied to clipboard',
+      title: t('common.copied'),
+      description: t('quote.correlationIdCopied'),
     });
   };
 
@@ -82,7 +84,7 @@ export default function QuoteDetailModal({
       >
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
-            <span>Quote Details</span>
+            <span>{t('quoteDetail.title')}</span>
             <Badge>{quote.status}</Badge>
           </DialogTitle>
         </DialogHeader>
@@ -92,7 +94,7 @@ export default function QuoteDetailModal({
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Package className="h-4 w-4" />
-                <span>Carrier</span>
+                <span>{t('quoteDetail.carrier')}</span>
               </div>
               <p className="text-lg font-semibold">{quote.carrier}</p>
               <p className="text-sm text-muted-foreground">{quote.service}</p>
@@ -101,14 +103,14 @@ export default function QuoteDetailModal({
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Calendar className="h-4 w-4" />
-                <span>Created</span>
+                <span>{t('quoteDetail.created')}</span>
               </div>
               <p className="text-lg font-semibold">
-                {new Date(quote.createdAt).toLocaleString()}
+                {new Date(quote.createdAt).toLocaleString(i18n.language === 'pt-BR' ? 'pt-BR' : 'en-US')}
               </p>
               {quote.estimatedDelivery && (
                 <p className="text-sm text-muted-foreground">
-                  Est. delivery: {new Date(quote.estimatedDelivery).toLocaleDateString()}
+                  {t('quoteDetail.estimatedDelivery')}: {new Date(quote.estimatedDelivery).toLocaleDateString(i18n.language === 'pt-BR' ? 'pt-BR' : 'en-US')}
                 </p>
               )}
             </div>
@@ -119,24 +121,24 @@ export default function QuoteDetailModal({
           <div className="space-y-3">
             <div className="flex items-center gap-2 text-sm font-medium">
               <MapPin className="h-4 w-4" />
-              Shipment Details
+              {t('quoteDetail.shipmentDetails')}
             </div>
             <div className="grid gap-3 rounded-lg bg-muted p-4 text-sm">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Origin:</span>
+                <span className="text-muted-foreground">{t('quoteDetail.origin')}</span>
                 <span className="font-medium">{quote.originPostal}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Destination:</span>
+                <span className="text-muted-foreground">{t('quoteDetail.destination')}</span>
                 <span className="font-medium">{quote.destinationPostal}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Weight:</span>
+                <span className="text-muted-foreground">{t('quote.weight')}:</span>
                 <span className="font-medium">{quote.weight} kg</span>
               </div>
               {quote.dimensions && (
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Dimensions:</span>
+                  <span className="text-muted-foreground">{t('quoteDetail.dimensions')}</span>
                   <span className="font-medium">
                     {quote.dimensions.length} × {quote.dimensions.width} ×{' '}
                     {quote.dimensions.height} cm
@@ -156,7 +158,7 @@ export default function QuoteDetailModal({
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">Correlation ID</span>
+              <span className="text-sm font-medium">{t('quote.correlationId')}</span>
               <Button
                 variant="ghost"
                 size="sm"
@@ -164,7 +166,7 @@ export default function QuoteDetailModal({
                 className="gap-2"
               >
                 <Copy className="h-3 w-3" />
-                Copy
+                {t('common.copy')}
               </Button>
             </div>
             <div className="rounded-md bg-muted px-3 py-2 font-mono text-xs">
@@ -180,7 +182,7 @@ export default function QuoteDetailModal({
                 onClick={() => setDebugExpanded(!debugExpanded)}
                 className="w-full justify-between"
               >
-                <span className="text-sm font-medium">Debug Information</span>
+                <span className="text-sm font-medium">{t('quoteDetail.debugInformation')}</span>
                 {debugExpanded ? (
                   <ChevronUp className="h-4 w-4" />
                 ) : (
@@ -207,12 +209,12 @@ export default function QuoteDetailModal({
                 {isRegenerating ? (
                   <>
                     <RefreshCw className="h-4 w-4 animate-spin" />
-                    Regenerating...
+                    {t('quoteDetail.regenerating')}
                   </>
                 ) : (
                   <>
                     <RefreshCw className="h-4 w-4" />
-                    Regenerate Quote
+                    {t('quoteDetail.regenerateQuote')}
                   </>
                 )}
               </Button>
@@ -223,7 +225,7 @@ export default function QuoteDetailModal({
               variant="default"
               className="flex-1"
             >
-              Close
+              {t('common.close')}
             </Button>
           </div>
         </div>

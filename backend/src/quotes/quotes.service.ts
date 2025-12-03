@@ -4,6 +4,7 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
+import { I18nService } from 'nestjs-i18n';
 import { v4 as uuidv4 } from 'uuid';
 import { FirestoreService } from '../firestore/firestore.service';
 import { CarriersService } from '../carriers/carriers.service';
@@ -19,6 +20,7 @@ export class QuotesService {
     private firestoreService: FirestoreService,
     private carriersService: CarriersService,
     private billingService: BillingService,
+    private i18n: I18nService,
   ) {}
 
   async createQuote(
@@ -110,7 +112,7 @@ export class QuotesService {
       throw new HttpException(
         {
           code: error.code || 'QUOTE_ERROR',
-          message: error.message || 'Failed to create quote',
+          message: error.message || this.i18n.t('quote.FAILED_TO_CREATE'),
           correlationId,
         },
         error.status || HttpStatus.INTERNAL_SERVER_ERROR,
@@ -121,7 +123,10 @@ export class QuotesService {
   async getQuote(clientId: string, quoteId: string): Promise<Quote> {
     const quote = await this.firestoreService.getQuote(clientId, quoteId);
     if (!quote) {
-      throw new HttpException('Quote not found', HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        this.i18n.t('quote.QUOTE_NOT_FOUND'),
+        HttpStatus.NOT_FOUND,
+      );
     }
     return quote;
   }

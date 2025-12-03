@@ -1,6 +1,8 @@
 import { Package, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { NavLink } from '@/components/NavLink';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from './LanguageSwitcher';
 
 interface HeaderProps {
   appName?: string;
@@ -13,6 +15,8 @@ export default function Header({
   onLogout,
   userName,
 }: HeaderProps) {
+  const { t } = useTranslation();
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-card shadow-sm">
       <div className="container flex h-16 items-center justify-between px-4">
@@ -31,19 +35,20 @@ export default function Header({
               className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
               activeClassName="text-foreground font-semibold"
             >
-              New Quote
+              {t('navigation.newQuote')}
             </NavLink>
             <NavLink
               to="/dashboard"
               className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
               activeClassName="text-foreground font-semibold"
             >
-              Dashboard
+              {t('navigation.dashboard')}
             </NavLink>
           </nav>
         </div>
 
         <div className="flex items-center gap-4">
+          <LanguageSwitcher />
           {userName && (
             <span className="text-sm text-muted-foreground">
               {userName}
@@ -55,10 +60,10 @@ export default function Header({
               size="sm"
               onClick={onLogout}
               className="gap-2"
-              aria-label="Log out"
+              aria-label={t('auth.logout')}
             >
               <LogOut className="h-4 w-4" />
-              <span className="hidden sm:inline">Logout</span>
+              <span className="hidden sm:inline">{t('auth.logout')}</span>
             </Button>
           )}
         </div>

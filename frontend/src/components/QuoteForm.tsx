@@ -15,23 +15,22 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { useTranslation } from 'react-i18next';
 
-const quoteSchema = z.object({
+const createQuoteSchema = (t: (key: string) => string) => z.object({
   originPostal: z
     .string()
-    .regex(/^\d{8}$/, 'Postal code must be 8 digits'),
+    .regex(/^\d{8}$/, t('quote.postalCodeInvalid')),
   destinationPostal: z
     .string()
-    .regex(/^\d{8}$/, 'Postal code must be 8 digits'),
-  weight: z.number().min(0.1, 'Weight must be at least 0.1 kg'),
-  length: z.number().min(1, 'Length must be at least 1 cm'),
-  width: z.number().min(1, 'Width must be at least 1 cm'),
-  height: z.number().min(1, 'Height must be at least 1 cm'),
+    .regex(/^\d{8}$/, t('quote.postalCodeInvalid')),
+  weight: z.number().min(0.1, t('quote.weightMin')),
+  length: z.number().min(1, t('quote.dimensionMin')),
+  width: z.number().min(1, t('quote.dimensionMin')),
+  height: z.number().min(1, t('quote.dimensionMin')),
   serviceOptions: z.array(z.string()).optional(),
   declaredValue: z.number().optional(),
 });
-
-type QuoteFormData = z.infer<typeof quoteSchema>;
 
 interface QuoteFormProps {
   onSubmit: (payload: QuoteRequest) => Promise<void>;
@@ -39,17 +38,22 @@ interface QuoteFormProps {
   disabled?: boolean;
 }
 
-const SERVICE_OPTIONS = [
-  { id: 'insurance', label: 'Insurance' },
-  { id: 'signature', label: 'Signature Required' },
-  { id: 'tracking', label: 'Real-time Tracking' },
-];
-
 export default function QuoteForm({
   onSubmit,
   initialValues,
   disabled = false,
 }: QuoteFormProps) {
+  const { t } = useTranslation();
+  
+  const quoteSchema = createQuoteSchema(t);
+  type QuoteFormData = z.infer<typeof quoteSchema>;
+  
+  const SERVICE_OPTIONS = [
+    { id: 'insurance', label: t('quote.insurance') },
+    { id: 'signature', label: t('quote.signatureRequired') },
+    { id: 'tracking', label: t('quote.realTimeTracking') },
+  ];
+
   const {
     register,
     handleSubmit,
@@ -94,7 +98,7 @@ export default function QuoteForm({
       <div className="grid gap-6 md:grid-cols-2">
         <DebouncedPostalInput
           id="originPostal"
-          label="Origin Postal Code"
+          label={t('quote.originPostalCode')}
           value={originPostal}
           onChange={(value) => setValue('originPostal', value)}
           error={errors.originPostal?.message}
@@ -103,7 +107,7 @@ export default function QuoteForm({
 
         <DebouncedPostalInput
           id="destinationPostal"
-          label="Destination Postal Code"
+          label={t('quote.destinationPostalCode')}
           value={destinationPostal}
           onChange={(value) => setValue('destinationPostal', value)}
           error={errors.destinationPostal?.message}
@@ -113,14 +117,14 @@ export default function QuoteForm({
 
       <div className="space-y-2">
         <div className="flex items-center gap-2">
-          <Label htmlFor="weight">Weight (kg)</Label>
+          <Label htmlFor="weight">{t('quote.weight')}</Label>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Info className="h-4 w-4 text-muted-foreground" />
               </TooltipTrigger>
               <TooltipContent>
-                <p>Enter the package weight in kilograms</p>
+                <p>{t('quote.weightTooltip')}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -143,7 +147,7 @@ export default function QuoteForm({
 
       <div className="grid gap-4 md:grid-cols-3">
         <div className="space-y-2">
-          <Label htmlFor="length">Length (cm)</Label>
+          <Label htmlFor="length">{t('quote.length')}</Label>
           <Input
             id="length"
             type="number"
@@ -157,7 +161,7 @@ export default function QuoteForm({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="width">Width (cm)</Label>
+          <Label htmlFor="width">{t('quote.width')}</Label>
           <Input
             id="width"
             type="number"
@@ -171,7 +175,7 @@ export default function QuoteForm({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="height">Height (cm)</Label>
+          <Label htmlFor="height">{t('quote.height')}</Label>
           <Input
             id="height"
             type="number"
@@ -186,7 +190,7 @@ export default function QuoteForm({
       </div>
 
       <div className="space-y-3">
-        <Label>Service Options</Label>
+        <Label>{t('quote.serviceOptions')}</Label>
         <div className="space-y-2">
           {SERVICE_OPTIONS.map((option) => (
             <div key={option.id} className="flex items-center space-x-2">
@@ -208,7 +212,7 @@ export default function QuoteForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="declaredValue">Declared Value (optional)</Label>
+        <Label htmlFor="declaredValue">{t('quote.declaredValue')}</Label>
         <Input
           id="declaredValue"
           type="number"
@@ -228,10 +232,10 @@ export default function QuoteForm({
         {isSubmitting ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Calculating...
+            {t('quote.calculating')}
           </>
         ) : (
-          'Get Quote'
+          t('quote.getQuote')
         )}
       </Button>
     </form>
