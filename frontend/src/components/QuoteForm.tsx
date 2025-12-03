@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -43,16 +44,22 @@ export default function QuoteForm({
   initialValues,
   disabled = false,
 }: QuoteFormProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   
-  const quoteSchema = createQuoteSchema(t);
+  const quoteSchema = useMemo(
+    () => createQuoteSchema(t),
+    [t, i18n.language]
+  );
   type QuoteFormData = z.infer<typeof quoteSchema>;
   
-  const SERVICE_OPTIONS = [
-    { id: 'insurance', label: t('quote.insurance') },
-    { id: 'signature', label: t('quote.signatureRequired') },
-    { id: 'tracking', label: t('quote.realTimeTracking') },
-  ];
+  const SERVICE_OPTIONS = useMemo(
+    () => [
+      { id: 'insurance', label: t('quote.insurance') },
+      { id: 'signature', label: t('quote.signatureRequired') },
+      { id: 'tracking', label: t('quote.realTimeTracking') },
+    ],
+    [t, i18n.language]
+  );
 
   const {
     register,

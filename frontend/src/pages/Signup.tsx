@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -24,12 +24,15 @@ const createSignupSchema = (t: (key: string) => string) => z.object({
 });
 
 export default function Signup() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   
-  const signupSchema = createSignupSchema(t);
+  const signupSchema = useMemo(
+    () => createSignupSchema(t),
+    [t, i18n.language]
+  );
   type SignupFormData = z.infer<typeof signupSchema>;
 
   // Check if user is already authenticated with a valid token
