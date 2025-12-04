@@ -50,6 +50,7 @@ const getI18nPath = () => {
     CarriersModule,
     QuotesModule,
     LabelsModule,
+    // FrontendModule removed - using Express middleware in main.ts instead
   ],
 })
 export class AppModule {}

@@ -1,8 +1,34 @@
 import { Quote, QuoteRequest } from '@/types/quote';
 
-// Backend is currently running on http://localhost:3001/api (see Nest startup log)
-// Use VITE_API_BASE to override this in different environments if needed.
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:3001/api';
+// API base URL configuration
+// Automatically detects if served from same origin (backend) and uses relative path
+// Otherwise uses full URL for development
+const getApiBase = () => {
+  // Check for environment variable override
+  if (import.meta.env.VITE_API_BASE) {
+    return import.meta.env.VITE_API_BASE;
+  }
+  
+  // If we're on the same origin as the backend (production build served from backend)
+  // Use relative path - this works because frontend and backend are on same port
+  // In development mode, Vite runs on different port, so use full URL
+  if (typeof window !== 'undefined') {
+    // Check if we're likely being served from the backend (same origin)
+    // Backend typically runs on port 3000, frontend dev on 5173
+    const isProduction = window.location.port === '' || 
+                        window.location.port === '3000' ||
+                        window.location.hostname !== 'localhost';
+    
+    if (isProduction || import.meta.env.PROD) {
+      return '/api';
+    }
+  }
+  
+  // Development mode - use full URL
+  return 'http://localhost:3000/api';
+};
+
+const API_BASE = getApiBase();
 
 interface ApiError {
   code: string;
