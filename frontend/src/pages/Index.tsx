@@ -59,12 +59,12 @@ export default function Index() {
           </div>
           <div className="flex items-center gap-4">
             <LanguageSwitcher />
-            {!isAuthenticated && (
+          {!isAuthenticated && (
               <Button onClick={() => navigate('/login')}>{t('auth.signIn')}</Button>
-            )}
-            {isAuthenticated && (
+          )}
+          {isAuthenticated && (
               <Button onClick={handleLogout}>{t('auth.signOut')}</Button>
-            )}
+          )}
           </div>
         </div>
       </header>
