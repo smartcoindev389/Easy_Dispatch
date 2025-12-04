@@ -6,6 +6,7 @@ import PriceCard from '@/components/PriceCard';
 import { useSubmitQuote } from '@/hooks/useQuotes';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 import { CheckCircle2 } from 'lucide-react';
 import { Quote } from '@/types/quote';
 import { apiClient } from '@/services/api';
@@ -33,7 +34,13 @@ export default function QuotePage() {
       const result = await submitQuote.mutateAsync(payload);
       setSuccessQuote(result);
     } catch (err: any) {
-      setError(err.message || t('quote.failedToGenerate'));
+      const errorMessage = err.message || err.code || t('quote.failedToGenerate');
+      const correlationId = err.correlationId;
+      setError(
+        correlationId
+          ? `${errorMessage} (${t('quote.correlationId')}: ${correlationId})`
+          : errorMessage
+      );
     }
   };
 
@@ -54,7 +61,25 @@ export default function QuotePage() {
 
           {error && (
             <Alert variant="destructive">
-              <AlertDescription>{error}</AlertDescription>
+              <AlertDescription>
+                <div className="space-y-2">
+                  <p className="font-medium">{error}</p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setError(null);
+                      setSuccessQuote(null);
+                      if (submitQuote.error) {
+                        submitQuote.reset();
+                      }
+                    }}
+                    className="mt-2"
+                  >
+                    {t('common.retry')}
+                  </Button>
+                </div>
+              </AlertDescription>
             </Alert>
           )}
 

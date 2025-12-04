@@ -55,7 +55,7 @@ export default function Index() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-2xl font-bold">
             <Package className="h-8 w-8 text-primary" />
-            Easy Dispatch
+            {t('common.appName')}
           </div>
           <div className="flex items-center gap-4">
             <LanguageSwitcher />

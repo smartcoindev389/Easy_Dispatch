@@ -165,11 +165,7 @@ export default function Login() {
               )}
             </Button>
 
-            <div className="rounded-md bg-muted p-3 text-sm text-muted-foreground">
-              <p className="font-medium mb-1">{t('auth.demoCredentials')}</p>
-              <p>{t('auth.demoEmail')}</p>
-              <p>{t('auth.demoPassword')}</p>
-            </div>
+          
 
             <div className="text-center text-sm text-muted-foreground">
               {t('auth.dontHaveAccount')}{' '}

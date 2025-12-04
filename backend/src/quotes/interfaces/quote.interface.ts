@@ -27,5 +27,9 @@ export interface Quote {
     carrier: string;
     serviceType: string;
   };
+  labelGenerated?: boolean;
+  labelId?: string;
+  labelGeneratedAt?: string;
+  updatedAt?: string;
 }
 

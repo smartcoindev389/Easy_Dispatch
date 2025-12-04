@@ -2,13 +2,28 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { I18nModule, AcceptLanguageResolver, I18nJsonLoader } from 'nestjs-i18n';
 import * as path from 'path';
+import { existsSync } from 'fs';
 import { AuthModule } from './auth/auth.module';
 import { QuotesModule } from './quotes/quotes.module';
 import { CarriersModule } from './carriers/carriers.module';
 import { BillingModule } from './billing/billing.module';
 import { FirestoreModule } from './firestore/firestore.module';
 import { CommonModule } from './common/common.module';
+import { LabelsModule } from './labels/labels.module';
 import { configValidationSchema } from './config/config.schema';
+
+// Determine the correct i18n path (works in both dev and production)
+const getI18nPath = () => {
+  const distPath = path.join(__dirname, '/i18n/');
+  const srcPath = path.join(process.cwd(), 'src/i18n/');
+  
+  // In production/build, use dist path
+  if (existsSync(distPath)) {
+    return distPath;
+  }
+  // In development, use src path
+  return srcPath;
+};
 
 @Module({
   imports: [
@@ -18,11 +33,11 @@ import { configValidationSchema } from './config/config.schema';
       envFilePath: ['.env.local', '.env'],
     }),
     I18nModule.forRoot({
-      fallbackLanguage: 'en',
+      fallbackLanguage: 'pt-BR', // Set Portuguese (Brazil) as default
       loader: I18nJsonLoader,
       loaderOptions: {
-        path: path.join(__dirname, '/i18n/'),
-        watch: true,
+        path: getI18nPath(),
+        watch: process.env.NODE_ENV !== 'production',
       },
       resolvers: [
         AcceptLanguageResolver,
@@ -34,6 +49,7 @@ import { configValidationSchema } from './config/config.schema';
     BillingModule,
     CarriersModule,
     QuotesModule,
+    LabelsModule,
   ],
 })
 export class AppModule {}

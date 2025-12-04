@@ -113,6 +113,22 @@ export class FirestoreService implements OnModuleInit {
     return doc.data() as Quote;
   }
 
+  async updateQuote(
+    clientId: string,
+    quoteId: string,
+    updates: Partial<Quote>,
+  ): Promise<void> {
+    await this.db
+      .collection('clients')
+      .doc(clientId)
+      .collection('quotes')
+      .doc(quoteId)
+      .update({
+        ...updates,
+        updatedAt: new Date().toISOString(),
+      });
+  }
+
   async getQuotes(
     clientId: string,
     filters?: {

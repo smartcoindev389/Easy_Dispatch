@@ -11,11 +11,12 @@ interface HeaderProps {
 }
 
 export default function Header({
-  appName = 'Easy Dispatch',
+  appName,
   onLogout,
   userName,
 }: HeaderProps) {
   const { t } = useTranslation();
+  const displayAppName = appName || t('common.appName');
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-card shadow-sm">
@@ -26,7 +27,7 @@ export default function Header({
             className="flex items-center gap-2 text-xl font-bold text-foreground transition-colors hover:text-primary"
           >
             <Package className="h-6 w-6 text-primary" />
-            {appName}
+            {displayAppName}
           </NavLink>
 
           <nav className="hidden items-center gap-6 md:flex" aria-label="Main navigation">

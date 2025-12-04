@@ -14,7 +14,9 @@
     "copy": "Copy",
     "copied": "Copied",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "retry": "Retry",
+    "appName": "Easy Dispatch"
   },
   "auth": {
     "welcome": "Welcome to Easy Dispatch",
@@ -122,6 +124,7 @@
     "title": "Shipping Quotes",
     "subtitle": "Made Simple",
     "description": "Professional logistics quote management for businesses of all sizes. Compare carriers, track quotes, and manage your shipping efficiently.",
+    "metaDescription": "Professional logistics quote management for businesses of all sizes. Compare carriers, track quotes, and manage your shipping efficiently.",
     "getStarted": "Get Started",
     "startNow": "Start Now",
     "readyToStreamline": "Ready to streamline your shipping?",

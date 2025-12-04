@@ -101,10 +101,13 @@ class ApiClient {
     carrier?: string;
     startDate?: string;
     endDate?: string;
+    enableRealtime?: boolean; // Frontend-only option, filtered out before sending
   }): Promise<{ quotes: Quote[]; nextCursor?: string }> {
     const searchParams = new URLSearchParams();
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
+        // Filter out frontend-only options that shouldn't be sent to backend
+        if (key === 'enableRealtime') return;
         if (value) searchParams.append(key, value.toString());
       });
     }
@@ -136,6 +139,17 @@ class ApiClient {
     return this.request('/auth/login', {
       method: 'POST',
       body: JSON.stringify(credentials),
+    });
+  }
+
+  async generateLabel(quoteId: string): Promise<{
+    labelId: string;
+    labelUrl: string;
+    pdfBase64?: string;
+  }> {
+    return this.request('/labels', {
+      method: 'POST',
+      body: JSON.stringify({ quoteId }),
     });
   }
 }

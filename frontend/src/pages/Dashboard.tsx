@@ -29,6 +29,7 @@ export default function Dashboard() {
   const { data: quotesData, isLoading, error } = useQuotes({
     status: statusFilter === 'all' ? undefined : statusFilter,
     carrier: carrierFilter === 'all' ? undefined : carrierFilter,
+    enableRealtime: true, // Enable real-time updates on dashboard
   });
 
   const { data: selectedQuote } = useQuote(selectedQuoteId);

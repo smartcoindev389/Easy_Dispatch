@@ -7,10 +7,14 @@ export function useQuotes(filters?: {
   carrier?: string;
   startDate?: string;
   endDate?: string;
+  enableRealtime?: boolean;
 }) {
   return useQuery({
     queryKey: ['quotes', filters],
     queryFn: () => apiClient.getQuotes(filters),
+    // Enable real-time updates by refetching every 5 seconds when enabled
+    refetchInterval: filters?.enableRealtime ? 5000 : false,
+    refetchIntervalInBackground: true,
   });
 }
 

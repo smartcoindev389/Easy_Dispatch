@@ -14,10 +14,12 @@
     "copy": "Copiar",
     "copied": "Copiado",
     "yes": "Sim",
-    "no": "Não"
+    "no": "Não",
+    "retry": "Tentar Novamente",
+    "appName": "Despacho fácil"
   },
   "auth": {
-    "welcome": "Bem-vindo ao Easy Dispatch",
+    "welcome": "Bem-vindo ao Despacho fácil",
     "signIn": "Entrar",
     "signUp": "Cadastrar",
     "signOut": "Sair",
@@ -122,10 +124,11 @@
     "title": "Cotações de Envio",
     "subtitle": "Simplificado",
     "description": "Gerenciamento profissional de cotações logísticas para empresas de todos os tamanhos. Compare transportadoras, acompanhe cotações e gerencie seus envios com eficiência.",
+    "metaDescription": "Gerenciamento profissional de cotações logísticas para empresas de todos os tamanhos. Compare transportadoras, acompanhe cotações e gerencie seus envios com eficiência.",
     "getStarted": "Começar",
     "startNow": "Comece Agora",
     "readyToStreamline": "Pronto para otimizar seus envios?",
-    "joinBusinesses": "Junte-se às empresas que usam o Easy Dispatch para economizar tempo e dinheiro em logística.",
+    "joinBusinesses": "Junte-se às empresas que usam o Despacho fácil para economizar tempo e dinheiro em logística.",
     "features": {
       "instantQuotes": {
         "title": "Cotações Instantâneas",
@@ -144,7 +147,7 @@
         "description": "Compare tarifas da FedEx, UPS, DHL e mais"
       }
     },
-    "footer": "© 2024 Easy Dispatch. Construído para gerenciamento logístico eficiente."
+    "footer": "© 2024 Despacho fácil. Construído para gerenciamento logístico eficiente."
   },
   "language": {
     "english": "English",

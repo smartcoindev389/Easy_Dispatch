@@ -16,7 +16,8 @@ i18n
         translation: ptBRTranslations,
       },
     },
-    fallbackLng: 'en',
+    lng: 'pt-BR', // Set Portuguese (Brazil) as default language
+    fallbackLng: 'pt-BR', // Fallback to Portuguese if translation is missing
     supportedLngs: ['en', 'pt-BR'],
     interpolation: {
       escapeValue: false,

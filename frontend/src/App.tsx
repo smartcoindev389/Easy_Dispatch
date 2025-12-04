@@ -12,6 +12,7 @@ import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { setUnauthorizedHandler } from "@/services/api";
 import { useEffect } from "react";
+import { useDocumentHead } from "@/hooks/useDocumentHead";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,9 +28,12 @@ const queryClient = new QueryClient({
   },
 });
 
-// Component to set up unauthorized handler
-function AuthHandler() {
+// Component to set up unauthorized handler and document head
+function AppInitializer() {
   const navigate = useNavigate();
+  
+  // Update document title and meta tags based on language
+  useDocumentHead();
 
   useEffect(() => {
     setUnauthorizedHandler(() => {
@@ -46,7 +50,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <AuthHandler />
+        <AppInitializer />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
